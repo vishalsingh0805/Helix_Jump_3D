@@ -2000,8 +2000,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 4
-  bounceForce: 7.5
-  maxSpeed: 5
+  bounceForce: 6
+  maxDownwardSpeed: 3
   initialPosition: {x: 0, y: 0, z: 0}
   isGameOver: 0
 --- !u!1 &1110238732

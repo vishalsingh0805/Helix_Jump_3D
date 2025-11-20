@@ -1,211 +1,3 @@
-// first version where only simple game is working
-
-// using UnityEngine;
-
-// public class Player : MonoBehaviour
-// {
-//     public float speed = 5f;
-//     public float bounceHeight = 2f;
-//     private Rigidbody rb;
-//     public Vector3 initialPosition;
-//     public bool isGameOver = false;
-//     private bool isMovingDown = true;
-
-//     void Start()
-//     {
-//         rb = GetComponent<Rigidbody>();
-//         initialPosition = transform.position;
-//         rb.useGravity = false;
-//     }
-//     void Update()
-//     {
-//         if (isGameOver) return;
-
-//         if (isMovingDown)
-//         {
-//             transform.Translate(Vector3.down * speed * Time.deltaTime);
-//         }
-//         else if (transform.position.y < initialPosition.y + bounceHeight)
-//         {
-//             transform.Translate(Vector3.up * speed * Time.deltaTime);
-//         }
-//         else
-//         {
-//             isMovingDown = true;
-//             initialPosition = transform.position;
-//         }
-//     }
-//     void OnCollisionEnter(Collision other)
-//     {
-//         if (isGameOver) return;
-
-//         if (other.gameObject.CompareTag("Safe"))
-//         {
-//             isMovingDown = false;
-//             initialPosition = transform.position;
-//         }
-//         else if (other.gameObject.CompareTag("Danger"))
-//         {
-//             isGameOver = true;
-//             GameManager.Instance?.OnGameOver();
-//             rb.linearVelocity = Vector3.zero;
-//         }
-//     }
-// }
-
-
-
-
-
-
-// power up feature added but there are issues
-// using UnityEngine;
-
-// public class Player : MonoBehaviour
-// {
-//     public float speed = 5f;
-//     public float bounceHeight = 2f;
-//     private Rigidbody rb;
-//     public Vector3 initialPosition;
-//     public bool isGameOver = false;
-//     private bool isMovingDown = true;
-    
-//     // POWER-UP VARIABLES - ADD THESE
-//     private int consecutiveEmptyPasses = 0;
-//     private bool isPowerUpActive = false;
-//     public Material powerUpMaterial;
-//     private Material normalMaterial;
-
-//     void Start()
-//     {
-//         rb = GetComponent<Rigidbody>();
-//         initialPosition = transform.position;
-//         rb.useGravity = false;
-//         normalMaterial = GetComponent<Renderer>().material; // Store original material
-//     }
-    
-//     void Update()
-//     {
-//         if (isGameOver) return;
-
-//         if (isMovingDown)
-//         {
-//             transform.Translate(Vector3.down * speed * Time.deltaTime);
-//         }
-//         else if (transform.position.y < initialPosition.y + bounceHeight)
-//         {
-//             transform.Translate(Vector3.up * speed * Time.deltaTime);
-//         }
-//         else
-//         {
-//             isMovingDown = true;
-//             initialPosition = transform.position;
-//         }
-//     }
-    
-//     // ADD THIS METHOD: Detect when ball passes through empty sections
-//     void OnTriggerEnter(Collider other)
-//     {
-//         if (isGameOver) return;
-        
-//         if (other.CompareTag("Empty"))
-//         {
-//             PassedThroughEmpty();
-//         }
-//     }
-    
-//     void OnCollisionEnter(Collision other)
-//     {
-//         if (isGameOver) return;
-
-//         if (other.gameObject.CompareTag("Safe"))
-//         {
-//             isMovingDown = false;
-//             initialPosition = transform.position;
-            
-//             // POWER-UP: Reset consecutive empty passes when hitting safe zone
-//             consecutiveEmptyPasses = 0;
-            
-//             // POWER-UP: Deactivate power-up if active
-//             if (isPowerUpActive)
-//             {
-//                 DeactivatePowerUp();
-//             }
-//         }
-//         else if (other.gameObject.CompareTag("Danger"))
-//         {
-//             // POWER-UP: Check if power-up is active
-//             if (isPowerUpActive)
-//             {
-//                 // Break through the danger zone
-//                 BreakDangerZone(other.gameObject);
-//                 // Continue moving down (don't set isMovingDown = false)
-//                 // Don't set game over
-//             }
-//             else
-//             {
-//                 // Normal game over behavior
-//                 isGameOver = true;
-//                 GameManager.Instance?.OnGameOver();
-//                 rb.linearVelocity = Vector3.zero;
-//             }
-            
-//             // POWER-UP: Reset consecutive empty passes
-//             consecutiveEmptyPasses = 0;
-//         }
-//     }
-    
-//     // POWER-UP METHODS - ADD THESE
-    
-//     public void PassedThroughEmpty()
-//     {
-//         if (isGameOver) return;
-        
-//         consecutiveEmptyPasses++;
-        
-//         // Activate power-up after 2 consecutive empty passes
-//         if (consecutiveEmptyPasses >= 2 && !isPowerUpActive)
-//         {
-//             ActivatePowerUp();
-//         }
-//     }
-    
-//     void ActivatePowerUp()
-//     {
-//         isPowerUpActive = true;
-        
-//         // Visual feedback - change ball color
-//         if (powerUpMaterial != null)
-//         {
-//             GetComponent<Renderer>().material = powerUpMaterial;
-//         }
-//     }
-    
-//     void DeactivatePowerUp()
-//     {
-//         isPowerUpActive = false;
-//         consecutiveEmptyPasses = 0;
-        
-//         // Reset visual - back to normal color
-//         if (normalMaterial != null)
-//         {
-//             GetComponent<Renderer>().material = normalMaterial;
-//         }
-//     }
-    
-//     void BreakDangerZone(GameObject dangerZone)
-//     {
-//         // Disable the danger zone
-//         dangerZone.SetActive(false);
-        
-//         // Add bonus points for breaking danger zone
-//         GameManager.Instance?.AddAndUpdateScore(5);
-        
-//         // Deactivate power-up after breaking one danger zone
-//         DeactivatePowerUp();
-//     }
-// }
-
 
 
 
@@ -383,45 +175,69 @@
 
 
 
+
+
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("Physics Movement Settings")]
-    public float moveForce = 4f;        // Replaces 'speed' - controls downward force
-    public float bounceForce = 7.5f;      // Replaces 'bounceHeight' - controls bounce strength
-    public float maxSpeed = 5f;          // Prevents ball from moving too fast
+    [Header("Physics Settings")]
+    public float moveForce = 2f;
+    public float bounceForce = 6f;
+    public float maxDownwardSpeed = 3f;
     
     private Rigidbody rb;
     public Vector3 initialPosition;
     public bool isGameOver = false;
-    private bool isGrounded = false;     // Track if ball is touching a platform
+    private bool isGrounded = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        
+        // Starting position
+        transform.position = new Vector3(0f, 0.3f, -0.86f);
         initialPosition = transform.position;
         
-        // CRITICAL: Set up physics properties
-        rb.useGravity = true;            // Enable Unity's gravity
-        rb.linearDamping = 0.3f;                  // Air resistance
-        rb.angularDamping = 0.3f;           // Rotation resistance
+        // NEW PHYSICS SYSTEM setup
+        rb.useGravity = true;
+        // These are automatically set in inspector, but we can set them in code too
+        // rb.linearDamping = 1.0f;  // This is "Linear Damping" in inspector
+        // rb.angularDamping = 0.8f; // This is "Angular Damping" in inspector
         
-        Debug.Log("Physics-based player initialized");
+        // Constraints are already set in inspector, but let's enforce them in code too
+        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        
+        Debug.Log("Player initialized with new physics system");
     }
     
     void Update()
     {
         if (isGameOver) 
         {
-            rb.linearVelocity = Vector3.zero;  // Stop all movement when game over
+            rb.linearVelocity = Vector3.zero;
             return;
         }
 
-        // Safety: Limit maximum speed to prevent unrealistic movement
-        if (rb.linearVelocity.magnitude > maxSpeed)
+        // Limit downward speed
+        if (rb.linearVelocity.y < -maxDownwardSpeed)
         {
-            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+            Vector3 currentVelocity = rb.linearVelocity;
+            currentVelocity.y = -maxDownwardSpeed;
+            rb.linearVelocity = currentVelocity;
+        }
+        
+        // Forcefully maintain X and Z position (safety measure)
+        Vector3 currentPos = transform.position;
+        if (Mathf.Abs(currentPos.x) > 0.01f || Mathf.Abs(currentPos.z + 0.86f) > 0.01f)
+        {
+            transform.position = new Vector3(0f, currentPos.y, -0.86f);
+        }
+        
+        // Also ensure velocity doesn't accumulate in X/Z
+        if (Mathf.Abs(rb.linearVelocity.x) > 0.01f || Mathf.Abs(rb.linearVelocity.z) > 0.01f)
+        {
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
     
@@ -429,7 +245,6 @@ public class Player : MonoBehaviour
     {
         if (isGameOver) return;
 
-        // Apply constant downward force when ball is in air (not grounded)
         if (!isGrounded)
         {
             rb.AddForce(Vector3.down * moveForce, ForceMode.Acceleration);
@@ -442,32 +257,19 @@ public class Player : MonoBehaviour
 
         if (other.gameObject.CompareTag("Safe"))
         {
-            isGrounded = true;  // Ball is now touching a platform
+            isGrounded = true;
             
-            // Calculate bounce direction (mostly upward with slight randomness)
-            Vector3 bounceDirection = Vector3.up;
-            
-            // Add some randomness based on where the ball hit the platform
-            if (other.contacts.Length > 0)
-            {
-                ContactPoint contact = other.contacts[0];
-                bounceDirection += contact.normal * 0.3f;
-                bounceDirection = bounceDirection.normalized;
-            }
-            
-            // Apply bounce force
-            rb.linearVelocity = Vector3.zero;  // Reset velocity for consistent bounce
-            rb.AddForce(bounceDirection * bounceForce, ForceMode.Impulse);
+            // Reset all velocity to prevent drift
+            rb.linearVelocity = Vector3.zero;
+            rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
             
             Debug.Log("Bounced on safe platform");
         }
         else if (other.gameObject.CompareTag("Danger"))
         {
-            // Game over when hitting danger zone
             isGameOver = true;
             GameManager.Instance?.OnGameOver();
             rb.linearVelocity = Vector3.zero;
-            rb.isKinematic = true;  // Freeze physics
         }
     }
     
@@ -475,7 +277,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Safe"))
         {
-            isGrounded = false;  // Ball left the platform
+            isGrounded = false;
         }
     }
 }
